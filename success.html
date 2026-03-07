@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding Complete — Developer Onboarding</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Payments<span>·</span>API</a>
+    <div class="nav-links">
+      <a href="step-1.html" class="nav-link">Step 1</a>
+      <a href="step-2.html" class="nav-link">Step 2</a>
+      <a href="step-3.html" class="nav-link">Step 3</a>
+      <a href="step-4.html" class="nav-link">Step 4</a>
+      <a href="step-5.html" class="nav-link">Step 5</a>
+    </div>
+  </div>
+</nav>
+
+<div class="progress-track">
+  <div class="progress-steps">
+    <div class="progress-line"><div class="progress-line-fill" style="width:100%;"></div></div>
+    <a href="step-1.html" class="step-dot done" data-step="1"></a>
+    <a href="step-2.html" class="step-dot done" data-step="2"></a>
+    <a href="step-3.html" class="step-dot done" data-step="3"></a>
+    <a href="step-4.html" class="step-dot done" data-step="4"></a>
+    <a href="step-5.html" class="step-dot done" data-step="5"></a>
+  </div>
+  <div class="progress-labels">
+    <span class="step-label done" data-step="1">Keys</span>
+    <span class="step-label done" data-step="2">SDK</span>
+    <span class="step-label done" data-step="3">Call</span>
+    <span class="step-label done" data-step="4">Hooks</span>
+    <span class="step-label done" data-step="5">Live</span>
+  </div>
+</div>
+
+<div class="success-layout">
+  <div style="font-size:3.5rem;margin-bottom:1.5rem;">🎉</div>
+
+  <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--text);letter-spacing:-0.025em;margin-bottom:0.75rem;">You're ready to go live.</h1>
+
+  <p style="color:var(--text-3);font-size:0.9375rem;line-height:1.7;margin-bottom:2.5rem;">You've completed all five onboarding steps. Your integration is authenticated, tested, and production-ready. Here's a summary of what you've built:</p>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:left;margin-bottom:2rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div style="display:flex;align-items:flex-start;gap:0.6rem;">
+        <span style="color:var(--green);font-weight:700;">✓</span>
+        <div>
+          <div style="font-weight:600;font-size:0.875rem;">API keys secured</div>
+          <div style="font-size:0.775rem;color:var(--text-3);">Stored in environment variables</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:0.6rem;">
+        <span style="color:var(--green);font-weight:700;">✓</span>
+        <div>
+          <div style="font-weight:600;font-size:0.875rem;">SDK installed &amp; verified</div>
+          <div style="font-size:0.775rem;color:var(--text-3);">Ping returned sandbox OK</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:0.6rem;">
+        <span style="color:var(--green);font-weight:700;">✓</span>
+        <div>
+          <div style="font-weight:600;font-size:0.875rem;">First transfer created</div>
+          <div style="font-size:0.775rem;color:var(--text-3);">ACH debit with idempotency key</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:0.6rem;">
+        <span style="color:var(--green);font-weight:700;">✓</span>
+        <div>
+          <div style="font-weight:600;font-size:0.875rem;">Webhooks configured</div>
+          <div style="font-size:0.775rem;color:var(--text-3);">HMAC-SHA256 signature verified</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:0.6rem;">
+        <span style="color:var(--green);font-weight:700;">✓</span>
+        <div>
+          <div style="font-weight:600;font-size:0.875rem;">Go-live checklist complete</div>
+          <div style="font-size:0.775rem;color:var(--text-3);">Security, reliability, compliance</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:0.6rem;">
+        <span style="color:var(--green);font-weight:700;">✓</span>
+        <div>
+          <div style="font-weight:600;font-size:0.875rem;">Key rotation policy set</div>
+          <div style="font-size:0.775rem;color:var(--text-3);">Zero-downtime procedure documented</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius);padding:1rem;text-align:left;margin-bottom:2rem;font-size:0.875rem;color:var(--text-2);">
+    <div style="font-weight:700;color:var(--amber);margin-bottom:0.25rem;">Switch to live keys</div>
+    Update <code style="font-family:var(--font-mono);">PAYMENTS_SECRET_KEY</code> in your production secrets manager to your <code style="font-family:var(--font-mono);">sk_live_</code> key and redeploy. The same SDK code works for both environments.
+  </div>
+
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="index.html" class="btn btn-outline">← Start over</a>
+    <a href="step-1.html" class="btn btn-amber">Review from Step 1</a>
+  </div>
+
+  <p style="font-size:0.75rem;color:var(--text-3);margin-top:3rem;">
+    Portfolio project by <a href="https://sulagnasasmal.github.io/doc-portal/" style="color:var(--amber);">Sulagna Sasmal</a>
+  </p>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><div class="footer-brand">Payments<span>·</span>API</div></div>
+    <div>
+      <div class="footer-col-title">Steps</div>
+      <ul class="footer-links">
+        <li><a href="step-1.html">1 — Account &amp; Keys</a></li>
+        <li><a href="step-2.html">2 — Install SDK</a></li>
+        <li><a href="step-3.html">3 — First API Call</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Portfolio</div>
+      <ul class="footer-links">
+        <li><a href="https://sulagnasasmal.github.io/doc-portal/">Doc-Portal ↗</a></li>
+        <li><a href="index.html">← Overview</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 Developer Onboarding — Portfolio project by Sulagna Sasmal</span></div>
+</footer>
+
+<script src="assets/js/onboarding.js"></script>
+<script>
+  renderProgressTrack(6); // all done
+</script>
+</body>
+</html>

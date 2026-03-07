@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 3: Make Your First API Call — Developer Onboarding</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Payments<span>·</span>API</a>
+    <div class="nav-links">
+      <a href="step-1.html" class="nav-link">Step 1</a>
+      <a href="step-2.html" class="nav-link">Step 2</a>
+      <a href="step-3.html" class="nav-link active">Step 3</a>
+      <a href="step-4.html" class="nav-link">Step 4</a>
+      <a href="step-5.html" class="nav-link">Step 5</a>
+    </div>
+  </div>
+</nav>
+
+<div class="progress-track">
+  <div class="progress-steps">
+    <div class="progress-line"><div class="progress-line-fill" style="width:40%;"></div></div>
+    <a href="step-1.html" class="step-dot done" data-step="1"></a>
+    <a href="step-2.html" class="step-dot done" data-step="2"></a>
+    <a href="step-3.html" class="step-dot active" data-step="3">3</a>
+    <a href="step-4.html" class="step-dot" data-step="4">4</a>
+    <a href="step-5.html" class="step-dot" data-step="5">5</a>
+  </div>
+  <div class="progress-labels">
+    <span class="step-label done" data-step="1">Keys</span>
+    <span class="step-label done" data-step="2">SDK</span>
+    <span class="step-label active" data-step="3">Call</span>
+    <span class="step-label" data-step="4">Hooks</span>
+    <span class="step-label" data-step="5">Live</span>
+  </div>
+</div>
+
+<div class="step-layout">
+  <div class="step-header-section">
+    <div class="step-badge">Step 3 of 5 · ~10 min</div>
+    <h1 class="step-title">Make Your First API Call</h1>
+    <p class="step-sub">Create a sandbox bank account object, initiate a test ACH debit transfer, and inspect the full API response. By the end of this step you'll have a real transfer ID in your terminal.</p>
+  </div>
+
+  <!-- Task 1 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">1</div>
+      <div class="task-title">Create a bank account object</div>
+    </div>
+    <p style="font-size:0.875rem;color:var(--text-2);margin-bottom:0.75rem;">A bank account object represents the external bank account. In sandbox mode, use any routing number — the API validates format, not real bank connectivity.</p>
+    <div class="code-tabs-wrap">
+      <div class="code-tabs-header">
+        <button class="code-tab" data-lang="node">Node.js</button>
+        <button class="code-tab" data-lang="python">Python</button>
+        <button class="code-tab" data-lang="curl">cURL</button>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="kw">const</span> { payments } = <span class="kw">require</span>(<span class="str">'./lib/payments'</span>);
+
+<span class="kw">const</span> account = <span class="kw">await</span> payments.bankAccounts.<span class="fn">create</span>({
+  account_number: <span class="str">'000123456789'</span>,
+  routing_number: <span class="str">'021000021'</span>, <span class="cmt">// JPMorgan Chase test routing</span>
+  account_type: <span class="str">'checking'</span>,
+  account_holder_name: <span class="str">'Ramona Green'</span>,
+  account_holder_type: <span class="str">'individual'</span>
+});
+
+console.<span class="fn">log</span>(account.id); <span class="cmt">// ba_xxxxxxxxxxxxxxxx</span></pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block">account = payments.bank_accounts.<span class="fn">create</span>(
+    account_number=<span class="str">"000123456789"</span>,
+    routing_number=<span class="str">"021000021"</span>,
+    account_type=<span class="str">"checking"</span>,
+    account_holder_name=<span class="str">"Ramona Green"</span>,
+    account_holder_type=<span class="str">"individual"</span>
+)
+
+<span class="fn">print</span>(account.id)  <span class="cmt"># ba_xxxxxxxxxxxxxxxx</span></pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block">curl https://api.paymentsapi.dev/v1/bank-accounts \
+  -H <span class="str">"Authorization: Bearer $PAYMENTS_SECRET_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{
+    "account_number": "000123456789",
+    "routing_number": "021000021",
+    "account_type": "checking",
+    "account_holder_name": "Ramona Green",
+    "account_holder_type": "individual"
+  }'</span></pre>
+      </div>
+    </div>
+    <div style="background:var(--code-bg);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:0.75rem;">
+      <div style="font-family:var(--font-mono);font-size:0.7rem;color:#64748b;margin-bottom:0.5rem;">Response</div>
+      <pre style="font-family:var(--font-mono);font-size:0.75rem;color:var(--code-text);line-height:1.8;overflow-x:auto;">{
+  <span style="color:#93c5fd;">"id"</span>: <span style="color:#86efac;">"ba_3kLmNpQ8rStUvWxYz"</span>,
+  <span style="color:#93c5fd;">"object"</span>: <span style="color:#86efac;">"bank_account"</span>,
+  <span style="color:#93c5fd;">"account_holder_name"</span>: <span style="color:#86efac;">"Ramona Green"</span>,
+  <span style="color:#93c5fd;">"account_type"</span>: <span style="color:#86efac;">"checking"</span>,
+  <span style="color:#93c5fd;">"last4"</span>: <span style="color:#86efac;">"6789"</span>,
+  <span style="color:#93c5fd;">"routing_number"</span>: <span style="color:#86efac;">"021000021"</span>,
+  <span style="color:#93c5fd;">"status"</span>: <span style="color:#86efac;">"verified"</span>,
+  <span style="color:#93c5fd;">"created_at"</span>: <span style="color:#86efac;">"2025-03-07T09:00:00Z"</span>
+}</pre>
+    </div>
+  </div>
+
+  <!-- Task 2 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">2</div>
+      <div class="task-title">Create an ACH transfer</div>
+    </div>
+    <p style="font-size:0.875rem;color:var(--text-2);margin-bottom:0.75rem;">Use the bank account ID from Task 1. Always include an <code style="background:var(--surface-2);padding:0.1rem 0.4rem;border-radius:0.25rem;font-family:var(--font-mono);font-size:0.8rem;">idempotency_key</code> to prevent duplicate transfers on retry.</p>
+    <div class="code-tabs-wrap">
+      <div class="code-tabs-header">
+        <button class="code-tab" data-lang="node">Node.js</button>
+        <button class="code-tab" data-lang="python">Python</button>
+        <button class="code-tab" data-lang="curl">cURL</button>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="kw">const</span> { randomUUID } = <span class="kw">require</span>(<span class="str">'crypto'</span>);
+
+<span class="kw">const</span> transfer = <span class="kw">await</span> payments.transfers.<span class="fn">create</span>({
+  amount: <span class="num">5000</span>,             <span class="cmt">// amount in cents — $50.00</span>
+  currency: <span class="str">'usd'</span>,
+  direction: <span class="str">'debit'</span>,      <span class="cmt">// pull funds from the bank account</span>
+  payment_method: <span class="str">'ach'</span>,
+  bank_account_id: account.id,
+  description: <span class="str">'Test transfer'</span>,
+  idempotency_key: <span class="fn">randomUUID</span>()
+});
+
+console.<span class="fn">log</span>(transfer.id);     <span class="cmt">// tr_xxxxxxxxxxxxxxxx</span>
+console.<span class="fn">log</span>(transfer.status); <span class="cmt">// "pending"</span></pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="kw">import</span> uuid
+
+transfer = payments.transfers.<span class="fn">create</span>(
+    amount=<span class="num">5000</span>,
+    currency=<span class="str">"usd"</span>,
+    direction=<span class="str">"debit"</span>,
+    payment_method=<span class="str">"ach"</span>,
+    bank_account_id=account.id,
+    description=<span class="str">"Test transfer"</span>,
+    idempotency_key=str(uuid.<span class="fn">uuid4</span>())
+)
+
+<span class="fn">print</span>(transfer.id)      <span class="cmt"># tr_xxxxxxxxxxxxxxxx</span>
+<span class="fn">print</span>(transfer.status)  <span class="cmt"># "pending"</span></pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block">curl https://api.paymentsapi.dev/v1/transfers \
+  -H <span class="str">"Authorization: Bearer $PAYMENTS_SECRET_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -H <span class="str">"Idempotency-Key: $(uuidgen)"</span> \
+  -d <span class="str">'{
+    "amount": 5000,
+    "currency": "usd",
+    "direction": "debit",
+    "payment_method": "ach",
+    "bank_account_id": "ba_3kLmNpQ8rStUvWxYz",
+    "description": "Test transfer"
+  }'</span></pre>
+      </div>
+    </div>
+
+    <div style="margin-top:1rem;">
+      <div style="font-size:0.8rem;font-weight:600;margin-bottom:0.5rem;">ACH transfer status lifecycle</div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+        <thead><tr style="background:var(--surface-2);"><th style="padding:0.4rem 0.6rem;border-bottom:1px solid var(--border);text-align:left;">Status</th><th style="padding:0.4rem 0.6rem;border-bottom:1px solid var(--border);text-align:left;">Meaning</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem 0.6rem;font-family:var(--font-mono);color:var(--amber);">pending</td><td style="padding:0.4rem 0.6rem;color:var(--text-2);">Transfer created, not yet submitted to ACH network</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem 0.6rem;font-family:var(--font-mono);color:var(--indigo);">processing</td><td style="padding:0.4rem 0.6rem;color:var(--text-2);">Submitted to ODFI, awaiting settlement (T+1 business day)</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem 0.6rem;font-family:var(--font-mono);color:var(--green);">completed</td><td style="padding:0.4rem 0.6rem;color:var(--text-2);">Settled — funds received</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem 0.6rem;font-family:var(--font-mono);color:var(--red);">returned</td><td style="padding:0.4rem 0.6rem;color:var(--text-2);">Return received from RDFI (R01–R33 return codes)</td></tr>
+          <tr><td style="padding:0.4rem 0.6rem;font-family:var(--font-mono);color:var(--red);">failed</td><td style="padding:0.4rem 0.6rem;color:var(--text-2);">Pre-submission validation failure</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Step checklist -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;">
+    <div style="font-weight:700;margin-bottom:1rem;">Step 3 Checklist</div>
+    <ul class="checklist">
+      <li><span class="check-box"></span>Bank account object created — copied the <code style="font-family:var(--font-mono);font-size:0.8rem;">ba_</code> ID</li>
+      <li><span class="check-box"></span>Transfer created with <code style="font-family:var(--font-mono);font-size:0.8rem;">idempotency_key</code> — copied the <code style="font-family:var(--font-mono);font-size:0.8rem;">tr_</code> ID</li>
+      <li><span class="check-box"></span>Transfer status is <code style="font-family:var(--font-mono);font-size:0.8rem;">"pending"</code> in the response</li>
+      <li><span class="check-box"></span>Transfer is visible in the sandbox dashboard</li>
+    </ul>
+  </div>
+
+  <div class="step-nav">
+    <a href="step-2.html" class="btn btn-outline">← Step 2</a>
+    <button id="complete-step-btn" class="btn btn-amber" onclick="completeAndNext()" disabled style="opacity:0.5;">
+      Complete Step 3 &amp; Continue →
+    </button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><div class="footer-brand">Payments<span>·</span>API</div></div>
+    <div>
+      <div class="footer-col-title">Steps</div>
+      <ul class="footer-links">
+        <li><a href="step-1.html">1 — Account &amp; Keys</a></li>
+        <li><a href="step-2.html">2 — Install SDK</a></li>
+        <li><a href="step-3.html">3 — First API Call</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Next</div>
+      <ul class="footer-links">
+        <li><a href="step-4.html">4 — Webhooks</a></li>
+        <li><a href="step-5.html">5 — Go Live</a></li>
+        <li><a href="index.html">← Overview</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 Developer Onboarding — Portfolio project by Sulagna Sasmal</span></div>
+</footer>
+
+<script src="assets/js/onboarding.js"></script>
+<script>
+  renderProgressTrack(3);
+  initChecklist("step3");
+
+  function completeAndNext() {
+    markStepComplete(3);
+    window.location.href = "step-4.html";
+  }
+</script>
+</body>
+</html>

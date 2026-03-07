@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer Onboarding — Payments API</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Payments<span>·</span>API</a>
+    <div class="nav-links">
+      <a href="step-1.html" class="nav-link">Step 1</a>
+      <a href="step-2.html" class="nav-link">Step 2</a>
+      <a href="step-3.html" class="nav-link">Step 3</a>
+      <a href="step-4.html" class="nav-link">Step 4</a>
+      <a href="step-5.html" class="nav-link">Step 5</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Developer Onboarding · Payments API</div>
+  <h1>Go from zero to your first live payment in 5 steps.</h1>
+  <p class="hero-sub">No fluff, no detours. Create your account, install the SDK, make a test call, set up webhooks, and pass your live checklist — in order.</p>
+  <div class="hero-cta">
+    <a href="step-1.html" class="btn btn-amber">Start Onboarding →</a>
+    <a href="#overview" class="btn btn-outline" style="color:#94a3b8;border-color:#334155;">See All Steps</a>
+  </div>
+</div>
+
+<!-- Feature strip -->
+<div style="max-width:900px;margin:3rem auto 0;padding:0 1.5rem;">
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;">
+    <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.825rem;color:var(--text-2);">
+      <span style="color:var(--green);">●</span> Sandbox &amp; live environments
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.825rem;color:var(--text-2);">
+      <span style="color:var(--amber);">●</span> Node.js · Python · cURL examples
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.825rem;color:var(--text-2);">
+      <span style="color:var(--teal);">●</span> ACH · Wire · RTP support
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.825rem;color:var(--text-2);">
+      <span style="color:var(--indigo);">●</span> Webhook signature verification
+    </div>
+  </div>
+</div>
+
+<!-- Steps overview -->
+<div class="steps-overview" id="overview">
+  <div style="text-align:center;margin-bottom:2rem;">
+    <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;">What You'll Do</div>
+    <h2 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--text);">Five steps to production</h2>
+  </div>
+
+  <div class="overview-step">
+    <div class="overview-num">1</div>
+    <div>
+      <div class="overview-title">Create Account &amp; Get API Keys</div>
+      <div class="overview-sub">Sign up, retrieve your test and live keys, and understand key types before writing a single line of code.</div>
+    </div>
+    <div class="overview-time">~5 min</div>
+  </div>
+
+  <div class="overview-step">
+    <div class="overview-num">2</div>
+    <div>
+      <div class="overview-title">Install the SDK</div>
+      <div class="overview-sub">Add the Payments SDK to your project using npm or pip, configure your environment variables, and verify installation.</div>
+    </div>
+    <div class="overview-time">~5 min</div>
+  </div>
+
+  <div class="overview-step">
+    <div class="overview-num">3</div>
+    <div>
+      <div class="overview-title">Make Your First API Call</div>
+      <div class="overview-sub">Create a sandbox bank account, initiate a test ACH transfer, and inspect the full API response in your terminal.</div>
+    </div>
+    <div class="overview-time">~10 min</div>
+  </div>
+
+  <div class="overview-step">
+    <div class="overview-num">4</div>
+    <div>
+      <div class="overview-title">Handle Webhooks</div>
+      <div class="overview-sub">Set up a webhook endpoint, verify signatures securely, and test event delivery with the sandbox simulator.</div>
+    </div>
+    <div class="overview-time">~10 min</div>
+  </div>
+
+  <div class="overview-step">
+    <div class="overview-num">5</div>
+    <div>
+      <div class="overview-title">Go Live Checklist</div>
+      <div class="overview-sub">Complete the pre-production checklist: error handling, idempotency, rate limits, key rotation, and compliance requirements.</div>
+    </div>
+    <div class="overview-time">~15 min</div>
+  </div>
+</div>
+
+<!-- Feature grid -->
+<div class="feature-grid">
+  <div class="feature-card">
+    <div class="feature-icon">⚡</div>
+    <div class="feature-title">REST API + SDK</div>
+    <div class="feature-desc">Native SDKs for Node.js and Python wrap the REST API. Or call with any HTTP client.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🏖</div>
+    <div class="feature-title">Full Sandbox</div>
+    <div class="feature-desc">Complete test environment — trigger ACH returns, simulate failures, test all edge cases before going live.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🔒</div>
+    <div class="feature-title">Webhook Signing</div>
+    <div class="feature-desc">Every webhook is signed with HMAC-SHA256. Verify with a single function call using your webhook secret.</div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Payments<span>·</span>API</div>
+      <p class="footer-desc">Developer onboarding for the PaymentsAPI — sandbox to production in 5 structured steps.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Onboarding Steps</div>
+      <ul class="footer-links">
+        <li><a href="step-1.html">Step 1 — Account &amp; Keys</a></li>
+        <li><a href="step-2.html">Step 2 — Install SDK</a></li>
+        <li><a href="step-3.html">Step 3 — First API Call</a></li>
+        <li><a href="step-4.html">Step 4 — Webhooks</a></li>
+        <li><a href="step-5.html">Step 5 — Go Live</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Portfolio</div>
+      <ul class="footer-links">
+        <li><a href="https://sulagnasasmal.github.io/doc-portal/">Doc-Portal ↗</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 Developer Onboarding — Portfolio project by Sulagna Sasmal</span></div>
+</footer>
+
+<script src="assets/js/onboarding.js"></script>
+</body>
+</html>

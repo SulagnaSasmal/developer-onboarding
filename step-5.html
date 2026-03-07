@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 5: Go Live Checklist — Developer Onboarding</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Payments<span>·</span>API</a>
+    <div class="nav-links">
+      <a href="step-1.html" class="nav-link">Step 1</a>
+      <a href="step-2.html" class="nav-link">Step 2</a>
+      <a href="step-3.html" class="nav-link">Step 3</a>
+      <a href="step-4.html" class="nav-link">Step 4</a>
+      <a href="step-5.html" class="nav-link active">Step 5</a>
+    </div>
+  </div>
+</nav>
+
+<div class="progress-track">
+  <div class="progress-steps">
+    <div class="progress-line"><div class="progress-line-fill" style="width:80%;"></div></div>
+    <a href="step-1.html" class="step-dot done" data-step="1"></a>
+    <a href="step-2.html" class="step-dot done" data-step="2"></a>
+    <a href="step-3.html" class="step-dot done" data-step="3"></a>
+    <a href="step-4.html" class="step-dot done" data-step="4"></a>
+    <a href="step-5.html" class="step-dot active" data-step="5">5</a>
+  </div>
+  <div class="progress-labels">
+    <span class="step-label done" data-step="1">Keys</span>
+    <span class="step-label done" data-step="2">SDK</span>
+    <span class="step-label done" data-step="3">Call</span>
+    <span class="step-label done" data-step="4">Hooks</span>
+    <span class="step-label active" data-step="5">Live</span>
+  </div>
+</div>
+
+<div class="step-layout">
+  <div class="step-header-section">
+    <div class="step-badge">Step 5 of 5 · ~15 min</div>
+    <h1 class="step-title">Go Live Checklist</h1>
+    <p class="step-sub">Before switching your integration to use live keys, every item on this checklist should be complete. Check off each item as you confirm it in your codebase.</p>
+  </div>
+
+  <!-- Security -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num" style="background:#ef4444;">!</div>
+      <div class="task-title">Security — blocking issues</div>
+    </div>
+    <ul class="checklist">
+      <li><span class="check-box"></span><strong>Secret key is in a secrets manager or environment variable</strong> — not hardcoded, not in version control</li>
+      <li><span class="check-box"></span><strong>Webhook signature is verified on every inbound request</strong> — using <code style="font-family:var(--font-mono);font-size:0.8rem;">timingSafeEqual</code> / <code style="font-family:var(--font-mono);font-size:0.8rem;">compare_digest</code> (timing-safe comparison)</li>
+      <li><span class="check-box"></span><strong>Publishable key only in client-side code</strong> — secret key never sent to browser or mobile app</li>
+      <li><span class="check-box"></span><strong>API keys are different per environment</strong> — <code style="font-family:var(--font-mono);font-size:0.8rem;">sk_test_</code> in dev/staging, <code style="font-family:var(--font-mono);font-size:0.8rem;">sk_live_</code> in production only</li>
+    </ul>
+  </div>
+
+  <!-- Reliability -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num" style="background:var(--indigo);">R</div>
+      <div class="task-title">Reliability — required for production</div>
+    </div>
+    <ul class="checklist">
+      <li><span class="check-box"></span><strong>Idempotency key on every transfer creation</strong> — using UUID v4 generated once per business operation, not per retry</li>
+      <li><span class="check-box"></span><strong>Idempotent webhook handler</strong> — processing the same event ID twice does not cause duplicate side effects</li>
+      <li><span class="check-box"></span><strong>Retry logic for 5xx errors</strong> — with exponential backoff and jitter (max 3 retries)</li>
+      <li><span class="check-box"></span><strong>Webhook returns 200 before processing</strong> — heavy work is done after responding, not before</li>
+    </ul>
+    <div class="callout callout-tip" style="margin-top:0.75rem;">
+      <div class="callout-title">Idempotency key lifecycle</div>
+      Generate the key once per business operation (e.g., "pay invoice #1234"). Store it with the record. If you need to retry the API call, reuse the same key — the API will return the original response instead of creating a duplicate transfer.
+    </div>
+  </div>
+
+  <!-- Error handling -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num" style="background:var(--amber);">E</div>
+      <div class="task-title">Error handling</div>
+    </div>
+    <div style="background:var(--code-bg);border-radius:var(--radius);padding:1.25rem;margin-bottom:0.75rem;overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:0.75rem;">
+        <thead><tr><th style="color:#94a3b8;text-align:left;padding:0.3rem 0.5rem;">HTTP Status</th><th style="color:#94a3b8;text-align:left;padding:0.3rem 0.5rem;">Error type</th><th style="color:#94a3b8;text-align:left;padding:0.3rem 0.5rem;">Action</th></tr></thead>
+        <tbody>
+          <tr><td style="color:#fb923c;padding:0.3rem 0.5rem;">400</td><td style="color:#e2e8f0;padding:0.3rem 0.5rem;">Validation error</td><td style="color:#86efac;padding:0.3rem 0.5rem;">Fix request params — do not retry</td></tr>
+          <tr><td style="color:#fb923c;padding:0.3rem 0.5rem;">401</td><td style="color:#e2e8f0;padding:0.3rem 0.5rem;">Auth failure</td><td style="color:#86efac;padding:0.3rem 0.5rem;">Check API key — do not retry</td></tr>
+          <tr><td style="color:#fb923c;padding:0.3rem 0.5rem;">422</td><td style="color:#e2e8f0;padding:0.3rem 0.5rem;">Business rule violation</td><td style="color:#86efac;padding:0.3rem 0.5rem;">Log and surface to user — do not retry</td></tr>
+          <tr><td style="color:#fb923c;padding:0.3rem 0.5rem;">429</td><td style="color:#e2e8f0;padding:0.3rem 0.5rem;">Rate limit</td><td style="color:#86efac;padding:0.3rem 0.5rem;">Retry after <code>Retry-After</code> header value</td></tr>
+          <tr><td style="color:#fb923c;padding:0.3rem 0.5rem;">503</td><td style="color:#e2e8f0;padding:0.3rem 0.5rem;">Service unavailable</td><td style="color:#86efac;padding:0.3rem 0.5rem;">Retry with exponential backoff</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="checklist">
+      <li><span class="check-box"></span>Application handles <code style="font-family:var(--font-mono);font-size:0.8rem;">transfer.returned</code> webhook — notifies appropriate party, updates records</li>
+      <li><span class="check-box"></span>Rate limit errors (<code style="font-family:var(--font-mono);font-size:0.8rem;">429</code>) handled with backoff, not immediate retry loops</li>
+      <li><span class="check-box"></span>Network timeout is set (recommended: 30s) — no indefinite waits</li>
+    </ul>
+  </div>
+
+  <!-- Compliance -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num" style="background:var(--teal);">C</div>
+      <div class="task-title">Compliance &amp; regulatory</div>
+    </div>
+    <ul class="checklist">
+      <li><span class="check-box"></span>KYB (Know Your Business) review completed — live key is enabled in dashboard</li>
+      <li><span class="check-box"></span>ACH authorization language obtained from end-user before initiating debit</li>
+      <li><span class="check-box"></span>Transfer descriptions are accurate and non-misleading — required by NACHA rule</li>
+      <li><span class="check-box"></span>Debit authorization records stored for minimum 2 years per NACHA requirements</li>
+    </ul>
+    <div class="callout callout-warning" style="margin-top:0.75rem;">
+      <div class="callout-title">ACH debit authorization is required by law</div>
+      Before debiting a bank account, you must obtain written or electronic authorization from the account holder. This must include the amount, frequency, and cancellation terms. NACHA Regulation E requirements apply.
+    </div>
+  </div>
+
+  <!-- Key rotation -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num" style="background:#7c3aed;">K</div>
+      <div class="task-title">Key rotation policy</div>
+    </div>
+    <p style="font-size:0.875rem;color:var(--text-2);margin-bottom:0.75rem;">Document and implement a key rotation process before going live — not after your first incident.</p>
+    <ul class="checklist">
+      <li><span class="check-box"></span>Zero-downtime rotation procedure documented: generate new key → update secrets manager → deploy → verify → revoke old key</li>
+      <li><span class="check-box"></span>Rotation schedule set: every 90 days minimum, immediately after any employee departure with key access</li>
+      <li><span class="check-box"></span>Alert configured for unexpected API key usage outside normal patterns</li>
+    </ul>
+  </div>
+
+  <!-- Final checklist -->
+  <div style="background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;">
+    <div style="font-weight:700;margin-bottom:0.5rem;color:var(--green);">Final pre-launch confirmation</div>
+    <ul class="checklist">
+      <li><span class="check-box"></span>All items above are checked</li>
+      <li><span class="check-box"></span>Code reviewed by a second engineer</li>
+      <li><span class="check-box"></span>Integration tested end-to-end in sandbox with all ACH return code scenarios</li>
+      <li><span class="check-box"></span>Production <code style="font-family:var(--font-mono);font-size:0.8rem;">sk_live_</code> key loaded and ping returns <code style="font-family:var(--font-mono);font-size:0.8rem;">{"environment": "live"}</code></li>
+    </ul>
+  </div>
+
+  <div class="step-nav">
+    <a href="step-4.html" class="btn btn-outline">← Step 4</a>
+    <button id="complete-step-btn" class="btn btn-green" onclick="completeAndFinish()" disabled style="opacity:0.5;">
+      Complete Onboarding ✓
+    </button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><div class="footer-brand">Payments<span>·</span>API</div></div>
+    <div>
+      <div class="footer-col-title">Steps</div>
+      <ul class="footer-links">
+        <li><a href="step-1.html">1 — Account &amp; Keys</a></li>
+        <li><a href="step-2.html">2 — Install SDK</a></li>
+        <li><a href="step-3.html">3 — First API Call</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Next</div>
+      <ul class="footer-links">
+        <li><a href="step-4.html">4 — Webhooks</a></li>
+        <li><a href="step-5.html">5 — Go Live</a></li>
+        <li><a href="index.html">← Overview</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 Developer Onboarding — Portfolio project by Sulagna Sasmal</span></div>
+</footer>
+
+<script src="assets/js/onboarding.js"></script>
+<script>
+  renderProgressTrack(5);
+  initChecklist("step5");
+
+  function completeAndFinish() {
+    markStepComplete(5);
+    window.location.href = "success.html";
+  }
+</script>
+</body>
+</html>

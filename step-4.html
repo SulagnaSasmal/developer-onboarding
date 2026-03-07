@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 4: Handle Webhooks — Developer Onboarding</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Payments<span>·</span>API</a>
+    <div class="nav-links">
+      <a href="step-1.html" class="nav-link">Step 1</a>
+      <a href="step-2.html" class="nav-link">Step 2</a>
+      <a href="step-3.html" class="nav-link">Step 3</a>
+      <a href="step-4.html" class="nav-link active">Step 4</a>
+      <a href="step-5.html" class="nav-link">Step 5</a>
+    </div>
+  </div>
+</nav>
+
+<div class="progress-track">
+  <div class="progress-steps">
+    <div class="progress-line"><div class="progress-line-fill" style="width:60%;"></div></div>
+    <a href="step-1.html" class="step-dot done" data-step="1"></a>
+    <a href="step-2.html" class="step-dot done" data-step="2"></a>
+    <a href="step-3.html" class="step-dot done" data-step="3"></a>
+    <a href="step-4.html" class="step-dot active" data-step="4">4</a>
+    <a href="step-5.html" class="step-dot" data-step="5">5</a>
+  </div>
+  <div class="progress-labels">
+    <span class="step-label done" data-step="1">Keys</span>
+    <span class="step-label done" data-step="2">SDK</span>
+    <span class="step-label done" data-step="3">Call</span>
+    <span class="step-label active" data-step="4">Hooks</span>
+    <span class="step-label" data-step="5">Live</span>
+  </div>
+</div>
+
+<div class="step-layout">
+  <div class="step-header-section">
+    <div class="step-badge">Step 4 of 5 · ~10 min</div>
+    <h1 class="step-title">Handle Webhooks</h1>
+    <p class="step-sub">Polling the API for transfer status is inefficient and unreliable. Webhooks push status changes to your endpoint the moment they happen. This step covers endpoint setup, signature verification, and idempotency.</p>
+  </div>
+
+  <!-- Why webhooks -->
+  <div class="callout callout-tip">
+    <div class="callout-title">Why webhooks, not polling?</div>
+    ACH transfers settle T+1. Polling every minute for 24+ hours to detect a status change wastes API quota and adds latency. With webhooks, you get notified within seconds of settlement, return, or failure.
+  </div>
+
+  <!-- Task 1 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">1</div>
+      <div class="task-title">Register your webhook endpoint</div>
+    </div>
+    <ol style="font-size:0.875rem;color:var(--text-2);padding-left:1.25rem;line-height:2.2;">
+      <li>In the dashboard, go to <strong>Settings → Webhooks → Add Endpoint</strong></li>
+      <li>Enter your endpoint URL (e.g., <code style="font-family:var(--font-mono);font-size:0.8rem;">https://yourapp.com/webhooks/payments</code>)</li>
+      <li>Select the events to subscribe to: <code style="font-family:var(--font-mono);font-size:0.8rem;">transfer.completed</code>, <code style="font-family:var(--font-mono);font-size:0.8rem;">transfer.returned</code>, <code style="font-family:var(--font-mono);font-size:0.8rem;">transfer.failed</code></li>
+      <li>Copy the generated webhook secret (<code style="font-family:var(--font-mono);font-size:0.8rem;">whsec_</code>) — add it to your <code style="font-family:var(--font-mono);font-size:0.8rem;">.env</code></li>
+    </ol>
+    <div class="callout callout-tip" style="margin-top:0.75rem;">
+      <div class="callout-title">Local development</div>
+      Use <code>ngrok http 3000</code> (or <code>cloudflared tunnel</code>) to expose your local server. Paste the ngrok HTTPS URL as your endpoint in the dashboard for sandbox testing.
+    </div>
+  </div>
+
+  <!-- Task 2 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">2</div>
+      <div class="task-title">Implement the webhook endpoint</div>
+    </div>
+    <p style="font-size:0.875rem;color:var(--text-2);margin-bottom:0.75rem;">Your endpoint must: (1) read the raw request body, (2) verify the HMAC-SHA256 signature before parsing, and (3) return HTTP 200 immediately. Heavy processing should happen asynchronously after the 200 response.</p>
+    <div class="code-tabs-wrap">
+      <div class="code-tabs-header">
+        <button class="code-tab" data-lang="node">Node.js (Express)</button>
+        <button class="code-tab" data-lang="python">Python (Flask)</button>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="kw">const</span> express = <span class="kw">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> crypto = <span class="kw">require</span>(<span class="str">'crypto'</span>);
+<span class="kw">const</span> app = <span class="fn">express</span>();
+
+<span class="cmt">// IMPORTANT: parse as raw bytes — must come before json() middleware</span>
+app.<span class="fn">post</span>(<span class="str">'/webhooks/payments'</span>, express.<span class="fn">raw</span>({ type: <span class="str">'application/json'</span> }), (req, res) => {
+  <span class="kw">const</span> signature = req.headers[<span class="str">'x-payments-signature'</span>];
+  <span class="kw">const</span> secret = process.env.<span class="var">PAYMENTS_WEBHOOK_SECRET</span>;
+
+  <span class="cmt">// Verify HMAC-SHA256 signature</span>
+  <span class="kw">const</span> expected = crypto
+    .<span class="fn">createHmac</span>(<span class="str">'sha256'</span>, secret)
+    .<span class="fn">update</span>(req.body)
+    .<span class="fn">digest</span>(<span class="str">'hex'</span>);
+
+  <span class="kw">const</span> isValid = crypto.<span class="fn">timingSafeEqual</span>(
+    Buffer.<span class="fn">from</span>(signature, <span class="str">'utf8'</span>),
+    Buffer.<span class="fn">from</span>(expected, <span class="str">'utf8'</span>)
+  );
+
+  <span class="kw">if</span> (!isValid) {
+    <span class="kw">return</span> res.<span class="fn">status</span>(<span class="num">401</span>).<span class="fn">end</span>();
+  }
+
+  <span class="kw">const</span> event = JSON.<span class="fn">parse</span>(req.body.toString());
+
+  <span class="cmt">// Respond 200 immediately, process asynchronously</span>
+  res.<span class="fn">status</span>(<span class="num">200</span>).<span class="fn">end</span>();
+
+  <span class="kw">switch</span> (event.type) {
+    <span class="kw">case</span> <span class="str">'transfer.completed'</span>:
+      <span class="fn">handleTransferCompleted</span>(event.data);
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="str">'transfer.returned'</span>:
+      <span class="fn">handleTransferReturned</span>(event.data);
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="str">'transfer.failed'</span>:
+      <span class="fn">handleTransferFailed</span>(event.data);
+      <span class="kw">break</span>;
+  }
+});</pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="kw">import</span> hmac, hashlib, os
+<span class="kw">from</span> flask <span class="kw">import</span> Flask, request, abort
+<span class="kw">import</span> json
+
+app = <span class="fn">Flask</span>(__name__)
+
+<span class="kw">@app.route</span>(<span class="str">"/webhooks/payments"</span>, methods=[<span class="str">"POST"</span>])
+<span class="kw">def</span> <span class="fn">webhook</span>():
+    signature = request.headers.get(<span class="str">"X-Payments-Signature"</span>, <span class="str">""</span>)
+    secret = os.environ[<span class="str">"PAYMENTS_WEBHOOK_SECRET"</span>].encode()
+    body = request.get_data()  <span class="cmt"># raw bytes — critical</span>
+
+    expected = hmac.<span class="fn">new</span>(secret, body, hashlib.sha256).<span class="fn">hexdigest</span>()
+
+    <span class="kw">if not</span> hmac.<span class="fn">compare_digest</span>(signature, expected):
+        <span class="fn">abort</span>(<span class="num">401</span>)
+
+    event = json.<span class="fn">loads</span>(body)
+
+    <span class="cmt"># Return 200 immediately</span>
+    <span class="kw">if</span> event[<span class="str">"type"</span>] == <span class="str">"transfer.completed"</span>:
+        <span class="fn">handle_completed</span>(event[<span class="str">"data"</span>])
+    <span class="kw">elif</span> event[<span class="str">"type"</span>] == <span class="str">"transfer.returned"</span>:
+        <span class="fn">handle_returned</span>(event[<span class="str">"data"</span>])
+
+    <span class="kw">return</span> <span class="str">""</span>, <span class="num">200</span></pre>
+      </div>
+    </div>
+    <div class="callout callout-warning" style="margin-top:0.75rem;">
+      <div class="callout-title">Raw body is required for signature verification</div>
+      If you parse the body with <code>express.json()</code> before the signature check, JSON serialization differences will cause every signature to fail. Always read raw bytes first, verify signature, then parse JSON.
+    </div>
+  </div>
+
+  <!-- Task 3 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">3</div>
+      <div class="task-title">Handle duplicate event delivery with idempotency</div>
+    </div>
+    <p style="font-size:0.875rem;color:var(--text-2);margin-bottom:0.75rem;">The Payments API retries unacknowledged webhooks up to 5 times over 24 hours. Your handler must be idempotent — processing the same event twice should not double-credit an account or trigger two emails.</p>
+    <div class="code-tabs-wrap">
+      <div class="code-tabs-header">
+        <button class="code-tab" data-lang="node">Node.js</button>
+        <button class="code-tab" data-lang="python">Python</button>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="cmt">// Use Redis or your database to track processed event IDs</span>
+<span class="kw">const</span> processedEvents = <span class="kw">new</span> <span class="fn">Set</span>(); <span class="cmt">// dev only — use Redis in prod</span>
+
+<span class="kw">async function</span> <span class="fn">handleEvent</span>(event) {
+  <span class="kw">if</span> (processedEvents.<span class="fn">has</span>(event.id)) {
+    console.<span class="fn">log</span>(<span class="str">`Duplicate event ${event.id} — skipping`</span>);
+    <span class="kw">return</span>;
+  }
+  processedEvents.<span class="fn">add</span>(event.id);
+
+  <span class="cmt">// Now safely process the event</span>
+  <span class="kw">await</span> <span class="fn">process</span>(event);
+}</pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="cmt"># Use Redis or your database — set() a key with TTL for 48h window</span>
+processed_events = <span class="fn">set</span>()  <span class="cmt"># dev only</span>
+
+<span class="kw">def</span> <span class="fn">handle_event</span>(event):
+    <span class="kw">if</span> event[<span class="str">"id"</span>] <span class="kw">in</span> processed_events:
+        <span class="fn">print</span>(f"Duplicate event {event['id']} — skipping")
+        <span class="kw">return</span>
+    processed_events.<span class="fn">add</span>(event[<span class="str">"id"</span>])
+
+    <span class="cmt"># Now safely process the event</span>
+    <span class="fn">process</span>(event)</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step checklist -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;">
+    <div style="font-weight:700;margin-bottom:1rem;">Step 4 Checklist</div>
+    <ul class="checklist">
+      <li><span class="check-box"></span>Webhook endpoint registered in dashboard</li>
+      <li><span class="check-box"></span><code style="font-family:var(--font-mono);font-size:0.8rem;">whsec_</code> secret added to <code style="font-family:var(--font-mono);font-size:0.8rem;">.env</code></li>
+      <li><span class="check-box"></span>Endpoint reads raw body before JSON parsing</li>
+      <li><span class="check-box"></span>Signature verified with <code style="font-family:var(--font-mono);font-size:0.8rem;">timingSafeEqual</code> / <code style="font-family:var(--font-mono);font-size:0.8rem;">compare_digest</code></li>
+      <li><span class="check-box"></span>Test event sent from dashboard — endpoint received it and returned 200</li>
+    </ul>
+  </div>
+
+  <div class="step-nav">
+    <a href="step-3.html" class="btn btn-outline">← Step 3</a>
+    <button id="complete-step-btn" class="btn btn-amber" onclick="completeAndNext()" disabled style="opacity:0.5;">
+      Complete Step 4 &amp; Continue →
+    </button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><div class="footer-brand">Payments<span>·</span>API</div></div>
+    <div>
+      <div class="footer-col-title">Steps</div>
+      <ul class="footer-links">
+        <li><a href="step-1.html">1 — Account &amp; Keys</a></li>
+        <li><a href="step-2.html">2 — Install SDK</a></li>
+        <li><a href="step-3.html">3 — First API Call</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Next</div>
+      <ul class="footer-links">
+        <li><a href="step-4.html">4 — Webhooks</a></li>
+        <li><a href="step-5.html">5 — Go Live</a></li>
+        <li><a href="index.html">← Overview</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 Developer Onboarding — Portfolio project by Sulagna Sasmal</span></div>
+</footer>
+
+<script src="assets/js/onboarding.js"></script>
+<script>
+  renderProgressTrack(4);
+  initChecklist("step4");
+
+  function completeAndNext() {
+    markStepComplete(4);
+    window.location.href = "step-5.html";
+  }
+</script>
+</body>
+</html>

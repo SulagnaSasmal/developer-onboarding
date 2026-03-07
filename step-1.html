@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 1: Create Account & Get API Keys — Developer Onboarding</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Payments<span>·</span>API</a>
+    <div class="nav-links">
+      <a href="step-1.html" class="nav-link active">Step 1</a>
+      <a href="step-2.html" class="nav-link">Step 2</a>
+      <a href="step-3.html" class="nav-link">Step 3</a>
+      <a href="step-4.html" class="nav-link">Step 4</a>
+      <a href="step-5.html" class="nav-link">Step 5</a>
+    </div>
+  </div>
+</nav>
+
+<div class="progress-track">
+  <div class="progress-steps">
+    <div class="progress-line"><div class="progress-line-fill" style="width:0%;"></div></div>
+    <a href="step-1.html" class="step-dot active" data-step="1">1</a>
+    <a href="step-2.html" class="step-dot" data-step="2">2</a>
+    <a href="step-3.html" class="step-dot" data-step="3">3</a>
+    <a href="step-4.html" class="step-dot" data-step="4">4</a>
+    <a href="step-5.html" class="step-dot" data-step="5">5</a>
+  </div>
+  <div class="progress-labels">
+    <span class="step-label active" data-step="1">Keys</span>
+    <span class="step-label" data-step="2">SDK</span>
+    <span class="step-label" data-step="3">Call</span>
+    <span class="step-label" data-step="4">Hooks</span>
+    <span class="step-label" data-step="5">Live</span>
+  </div>
+</div>
+
+<div class="step-layout">
+  <div class="step-header-section">
+    <div class="step-badge">Step 1 of 5 · ~5 min</div>
+    <h1 class="step-title">Create Your Account &amp; Get API Keys</h1>
+    <p class="step-sub">Before writing any code, you need a PaymentsAPI account and your API keys. This step covers account creation, key types, and how to store keys securely from day one.</p>
+  </div>
+
+  <!-- Task 1 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">1</div>
+      <div class="task-title">Create your account</div>
+    </div>
+    <ol style="font-size:0.875rem;color:var(--text-2);padding-left:1.25rem;line-height:2.2;">
+      <li>Go to <code style="background:var(--surface-2);padding:0.1rem 0.4rem;border-radius:0.25rem;font-family:var(--font-mono);font-size:0.8rem;">dashboard.paymentsapi.dev</code> and click <strong>Create Account</strong></li>
+      <li>Verify your email address</li>
+      <li>Complete the business profile form (required for live access)</li>
+      <li>You now have sandbox access immediately — live access is enabled after KYB review</li>
+    </ol>
+  </div>
+
+  <!-- Task 2 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">2</div>
+      <div class="task-title">Understand key types</div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:0.825rem;margin-bottom:0.75rem;">
+      <thead>
+        <tr style="background:var(--surface-2);text-align:left;">
+          <th style="padding:0.6rem;border-bottom:1px solid var(--border);">Key type</th>
+          <th style="padding:0.6rem;border-bottom:1px solid var(--border);">Prefix</th>
+          <th style="padding:0.6rem;border-bottom:1px solid var(--border);">What it can do</th>
+          <th style="padding:0.6rem;border-bottom:1px solid var(--border);">Where to use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:0.6rem;font-weight:600;">Secret key</td>
+          <td style="padding:0.6rem;"><code style="font-family:var(--font-mono);font-size:0.75rem;">sk_test_ / sk_live_</code></td>
+          <td style="padding:0.6rem;color:var(--text-2);">Full API access — create transfers, manage accounts</td>
+          <td style="padding:0.6rem;color:#ef4444;font-weight:600;">Server-side only</td>
+        </tr>
+        <tr>
+          <td style="padding:0.6rem;font-weight:600;">Publishable key</td>
+          <td style="padding:0.6rem;"><code style="font-family:var(--font-mono);font-size:0.75rem;">pk_test_ / pk_live_</code></td>
+          <td style="padding:0.6rem;color:var(--text-2);">Tokenize account data only — no transfer creation</td>
+          <td style="padding:0.6rem;color:var(--green);font-weight:600;">Safe for client-side</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout callout-warning">
+      <div class="callout-title">⚠ Never expose your secret key</div>
+      If <code>sk_live_</code> appears in version control, public logs, or client-side code — rotate it immediately from the dashboard. Leaked live keys grant full transfer creation access.
+    </div>
+  </div>
+
+  <!-- Task 3 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">3</div>
+      <div class="task-title">Retrieve your API keys from the dashboard</div>
+    </div>
+    <ol style="font-size:0.875rem;color:var(--text-2);padding-left:1.25rem;line-height:2.2;">
+      <li>In the dashboard, go to <strong>Settings → API Keys</strong></li>
+      <li>Your <code style="background:var(--surface-2);padding:0.1rem 0.4rem;border-radius:0.25rem;font-family:var(--font-mono);font-size:0.8rem;">sk_test_</code> key is visible immediately — copy it now</li>
+      <li>Your webhook secret (<code style="background:var(--surface-2);padding:0.1rem 0.4rem;border-radius:0.25rem;font-family:var(--font-mono);font-size:0.8rem;">whsec_</code>) is under <strong>Settings → Webhooks</strong> — you'll need it in Step 4</li>
+    </ol>
+  </div>
+
+  <!-- Task 4 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">4</div>
+      <div class="task-title">Store your keys securely before writing any code</div>
+    </div>
+    <p style="font-size:0.875rem;color:var(--text-2);margin-bottom:0.75rem;">Create a <code style="background:var(--surface-2);padding:0.1rem 0.4rem;border-radius:0.25rem;font-family:var(--font-mono);font-size:0.8rem;">.env</code> file in your project root and add it to <code style="background:var(--surface-2);padding:0.1rem 0.4rem;border-radius:0.25rem;font-family:var(--font-mono);font-size:0.8rem;">.gitignore</code> <strong>before</strong> your first commit.</p>
+
+    <div class="code-block">
+<span class="cmt"># .env — add this to .gitignore immediately</span>
+PAYMENTS_SECRET_KEY=sk_test_[your_secret_key_here]
+PAYMENTS_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+PAYMENTS_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxxxx
+
+<span class="cmt"># .gitignore</span>
+.env
+.env.local
+.env.*.local</div>
+
+    <div class="callout callout-tip">
+      <div class="callout-title">For production: use a secrets manager</div>
+      In production, store your <code>sk_live_</code> key in AWS Secrets Manager, GCP Secret Manager, or a CI/CD secrets store — never in environment files on a server.
+    </div>
+  </div>
+
+  <!-- Step checklist -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;">
+    <div style="font-weight:700;margin-bottom:1rem;">Step 1 Checklist</div>
+    <ul class="checklist" id="step1-checklist">
+      <li><span class="check-box"></span>Account created and email verified</li>
+      <li><span class="check-box"></span>Copied <code style="font-family:var(--font-mono);font-size:0.8rem;">sk_test_</code> key from dashboard</li>
+      <li><span class="check-box"></span>Created <code style="font-family:var(--font-mono);font-size:0.8rem;">.env</code> file with API key</li>
+      <li><span class="check-box"></span>Added <code style="font-family:var(--font-mono);font-size:0.8rem;">.env</code> to <code style="font-family:var(--font-mono);font-size:0.8rem;">.gitignore</code></li>
+    </ul>
+  </div>
+
+  <div class="step-nav">
+    <a href="index.html" class="btn btn-outline">← Overview</a>
+    <button id="complete-step-btn" class="btn btn-amber" onclick="completeAndNext()" disabled style="opacity:0.5;">
+      Complete Step 1 &amp; Continue →
+    </button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><div class="footer-brand">Payments<span>·</span>API</div></div>
+    <div>
+      <div class="footer-col-title">Steps</div>
+      <ul class="footer-links">
+        <li><a href="step-1.html">1 — Account &amp; Keys</a></li>
+        <li><a href="step-2.html">2 — Install SDK</a></li>
+        <li><a href="step-3.html">3 — First API Call</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Next</div>
+      <ul class="footer-links">
+        <li><a href="step-4.html">4 — Webhooks</a></li>
+        <li><a href="step-5.html">5 — Go Live</a></li>
+        <li><a href="index.html">← Overview</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 Developer Onboarding — Portfolio project by Sulagna Sasmal</span></div>
+</footer>
+
+<script src="assets/js/onboarding.js"></script>
+<script>
+  renderProgressTrack(1);
+  initChecklist("step1");
+
+  function completeAndNext() {
+    markStepComplete(1);
+    window.location.href = "step-2.html";
+  }
+</script>
+</body>
+</html>

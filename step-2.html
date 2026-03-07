@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 2: Install the SDK — Developer Onboarding</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Payments<span>·</span>API</a>
+    <div class="nav-links">
+      <a href="step-1.html" class="nav-link">Step 1</a>
+      <a href="step-2.html" class="nav-link active">Step 2</a>
+      <a href="step-3.html" class="nav-link">Step 3</a>
+      <a href="step-4.html" class="nav-link">Step 4</a>
+      <a href="step-5.html" class="nav-link">Step 5</a>
+    </div>
+  </div>
+</nav>
+
+<div class="progress-track">
+  <div class="progress-steps">
+    <div class="progress-line"><div class="progress-line-fill" style="width:20%;"></div></div>
+    <a href="step-1.html" class="step-dot done" data-step="1"></a>
+    <a href="step-2.html" class="step-dot active" data-step="2">2</a>
+    <a href="step-3.html" class="step-dot" data-step="3">3</a>
+    <a href="step-4.html" class="step-dot" data-step="4">4</a>
+    <a href="step-5.html" class="step-dot" data-step="5">5</a>
+  </div>
+  <div class="progress-labels">
+    <span class="step-label done" data-step="1">Keys</span>
+    <span class="step-label active" data-step="2">SDK</span>
+    <span class="step-label" data-step="3">Call</span>
+    <span class="step-label" data-step="4">Hooks</span>
+    <span class="step-label" data-step="5">Live</span>
+  </div>
+</div>
+
+<div class="step-layout">
+  <div class="step-header-section">
+    <div class="step-badge">Step 2 of 5 · ~5 min</div>
+    <h1 class="step-title">Install the SDK</h1>
+    <p class="step-sub">Add the Payments SDK to your project, load your API key from the environment variable you created in Step 1, and verify the installation with a single test request.</p>
+  </div>
+
+  <!-- Task 1 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">1</div>
+      <div class="task-title">Install the package</div>
+    </div>
+    <div class="code-tabs-wrap">
+      <div class="code-tabs-header">
+        <button class="code-tab" data-lang="node">Node.js</button>
+        <button class="code-tab" data-lang="python">Python</button>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="cmt"># npm</span>
+npm install @paymentsapi/sdk
+
+<span class="cmt"># or yarn</span>
+yarn add @paymentsapi/sdk
+
+<span class="cmt"># Verify installation</span>
+node -e "const p = require('@paymentsapi/sdk'); console.log(p.VERSION);"</pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="cmt"># pip</span>
+pip install paymentsapi
+
+<span class="cmt"># or with uv / pipenv</span>
+uv add paymentsapi
+
+<span class="cmt"># Verify installation</span>
+python -c "import paymentsapi; print(paymentsapi.__version__)"</pre>
+      </div>
+    </div>
+    <div class="callout callout-tip">
+      <div class="callout-title">Minimum versions</div>
+      Node.js 18 LTS or later · Python 3.9 or later. The SDK uses native <code>fetch</code> in Node and <code>httpx</code> in Python for async support.
+    </div>
+  </div>
+
+  <!-- Task 2 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">2</div>
+      <div class="task-title">Initialize the client</div>
+    </div>
+    <p style="font-size:0.875rem;color:var(--text-2);margin-bottom:0.75rem;">Create a single client instance and reuse it across your application. Never instantiate it inside a request handler — that needlessly creates connections on every call.</p>
+    <div class="code-tabs-wrap">
+      <div class="code-tabs-header">
+        <button class="code-tab" data-lang="node">Node.js</button>
+        <button class="code-tab" data-lang="python">Python</button>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="cmt">// src/lib/payments.js — instantiate once, export, import everywhere</span>
+<span class="kw">require</span>(<span class="str">'dotenv'</span>).config();
+<span class="kw">const</span> { PaymentsClient } = <span class="kw">require</span>(<span class="str">'@paymentsapi/sdk'</span>);
+
+<span class="kw">const</span> apiKey = process.env.<span class="var">PAYMENTS_SECRET_KEY</span>;
+<span class="kw">if</span> (!apiKey) {
+  <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">'PAYMENTS_SECRET_KEY environment variable is not set'</span>);
+}
+
+<span class="kw">const</span> payments = <span class="kw">new</span> <span class="fn">PaymentsClient</span>({ apiKey });
+
+module.exports = { payments };</pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="cmt"># src/lib/payments.py — instantiate once, import everywhere</span>
+<span class="kw">import</span> os
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+<span class="kw">from</span> paymentsapi <span class="kw">import</span> PaymentsClient
+
+load_dotenv()
+
+api_key = os.environ.get(<span class="str">"PAYMENTS_SECRET_KEY"</span>)
+<span class="kw">if not</span> api_key:
+    <span class="kw">raise</span> <span class="fn">EnvironmentError</span>(<span class="str">"PAYMENTS_SECRET_KEY environment variable is not set"</span>)
+
+payments = <span class="fn">PaymentsClient</span>(api_key=api_key)</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task 3 -->
+  <div class="task-card">
+    <div class="task-card-header">
+      <div class="task-num">3</div>
+      <div class="task-title">Verify the connection with a ping</div>
+    </div>
+    <p style="font-size:0.875rem;color:var(--text-2);margin-bottom:0.75rem;">Run a lightweight credential check against the sandbox before building anything further. This confirms your key is valid and the SDK is configured correctly.</p>
+    <div class="code-tabs-wrap">
+      <div class="code-tabs-header">
+        <button class="code-tab" data-lang="node">Node.js</button>
+        <button class="code-tab" data-lang="python">Python</button>
+        <button class="code-tab" data-lang="curl">cURL</button>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="kw">const</span> { payments } = <span class="kw">require</span>(<span class="str">'./lib/payments'</span>);
+
+<span class="kw">async function</span> <span class="fn">verify</span>() {
+  <span class="kw">const</span> result = <span class="kw">await</span> payments.ping();
+  console.<span class="fn">log</span>(result);
+  <span class="cmt">// Expected: { status: 'ok', environment: 'sandbox', account_id: 'acct_...' }</span>
+}
+
+<span class="fn">verify</span>();</pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block"><span class="kw">from</span> src.lib.payments <span class="kw">import</span> payments
+
+result = payments.<span class="fn">ping</span>()
+<span class="fn">print</span>(result)
+<span class="cmt"># Expected: {'status': 'ok', 'environment': 'sandbox', 'account_id': 'acct_...'}</span></pre>
+      </div>
+      <div class="code-tab-content">
+        <pre class="code-block">curl https://api.paymentsapi.dev/v1/ping \
+  -H <span class="str">"Authorization: Bearer $PAYMENTS_SECRET_KEY"</span>
+
+<span class="cmt"># Expected response:</span>
+<span class="cmt"># {</span>
+<span class="cmt">#   "status": "ok",</span>
+<span class="cmt">#   "environment": "sandbox",</span>
+<span class="cmt">#   "account_id": "acct_..."</span>
+<span class="cmt"># }</span></pre>
+      </div>
+    </div>
+    <div class="callout callout-success" style="margin-top:1rem;">
+      <div class="callout-title">Expected output</div>
+      If you see <code>{ "status": "ok", "environment": "sandbox" }</code> — your SDK is correctly installed and authenticated. Proceed to Step 3.
+    </div>
+  </div>
+
+  <!-- Step checklist -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;">
+    <div style="font-weight:700;margin-bottom:1rem;">Step 2 Checklist</div>
+    <ul class="checklist" id="step2-checklist">
+      <li><span class="check-box"></span>SDK installed (<code style="font-family:var(--font-mono);font-size:0.8rem;">npm install</code> or <code style="font-family:var(--font-mono);font-size:0.8rem;">pip install</code>)</li>
+      <li><span class="check-box"></span>Client initialized from environment variable</li>
+      <li><span class="check-box"></span>Ping returned <code style="font-family:var(--font-mono);font-size:0.8rem;">{"status": "ok"}</code></li>
+    </ul>
+  </div>
+
+  <div class="step-nav">
+    <a href="step-1.html" class="btn btn-outline">← Step 1</a>
+    <button id="complete-step-btn" class="btn btn-amber" onclick="completeAndNext()" disabled style="opacity:0.5;">
+      Complete Step 2 &amp; Continue →
+    </button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><div class="footer-brand">Payments<span>·</span>API</div></div>
+    <div>
+      <div class="footer-col-title">Steps</div>
+      <ul class="footer-links">
+        <li><a href="step-1.html">1 — Account &amp; Keys</a></li>
+        <li><a href="step-2.html">2 — Install SDK</a></li>
+        <li><a href="step-3.html">3 — First API Call</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Next</div>
+      <ul class="footer-links">
+        <li><a href="step-4.html">4 — Webhooks</a></li>
+        <li><a href="step-5.html">5 — Go Live</a></li>
+        <li><a href="index.html">← Overview</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 Developer Onboarding — Portfolio project by Sulagna Sasmal</span></div>
+</footer>
+
+<script src="assets/js/onboarding.js"></script>
+<script>
+  renderProgressTrack(2);
+  initChecklist("step2");
+
+  function completeAndNext() {
+    markStepComplete(2);
+    window.location.href = "step-3.html";
+  }
+</script>
+</body>
+</html>
