@@ -442,3 +442,39 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
   .hero h1 { font-size: 2rem; }
   .step-title { font-size: 1.4rem; }
 }
+
+/* ═══════════════════════════════════════════════
+   DARK THEME
+   ═══════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg:          #0f172a;
+  --bg-card:     #1e293b;
+  --bg-hover:    #334155;
+  --bg-tag:      #1e293b;
+  --border:      #334155;
+  --border-dark: #475569;
+  --text:        #f1f5f9;
+  --text-2:      #cbd5e1;
+  --text-3:      #94a3b8;
+  --text-4:      #64748b;
+  --code-bg:     #0f172a;
+  --code-text:   #e2e8f0;
+}
+[data-theme="dark"] .nav { background: rgba(15,23,42,0.95); border-bottom-color: var(--border); }
+[data-theme="dark"] body { background: var(--bg); color: var(--text); }
+
+/* Theme toggle */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  margin-left: 0.5rem;
+  transition: background 0.15s, color 0.15s;
+}
+.theme-toggle:hover { background: var(--bg-hover); color: var(--text); }
+
