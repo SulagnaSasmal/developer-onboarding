@@ -54,7 +54,7 @@ All pages support dark and light themes via a toggle button (◐ / ☀) in the n
 
 - Dynamic "Try It" sandbox widget (live API calls from the browser)
 - Progress saving across sessions (already uses `localStorage`)
-- Mobile-optimised checklist interactions
+- Mobile-optimized checklist interactions
 - Team onboarding mode (track completion per developer)
 
 ## Usage
